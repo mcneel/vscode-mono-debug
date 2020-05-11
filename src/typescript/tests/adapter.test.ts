@@ -15,7 +15,7 @@ suite('Node Debug Adapter', () => {
 	const PROJECT_ROOT = Path.join(__dirname, '../../');
 	const DATA_ROOT = Path.join(PROJECT_ROOT, 'testdata/');
 
-	const DEBUG_ADAPTER = Path.join(PROJECT_ROOT, 'bin/Release/mono-debug.exe');
+	const DEBUG_ADAPTER = Path.join(PROJECT_ROOT, 'bin/Release/net45/mono-debug.exe');
 
 
 	let dc: DebugClient;
@@ -83,12 +83,12 @@ suite('Node Debug Adapter', () => {
 		test('should stop on debugger statement', () => {
 
 			const PROGRAM = Path.join(DATA_ROOT, 'simple_break/Program.exe');
-			const DEBUGGER_LINE = 10;
+			const DEBUGGER_LINE = 11;
 
 			return Promise.all([
 				dc.configurationSequence(),
 				dc.launch({ program: PROGRAM }),
-				dc.assertStoppedLocation('step', DEBUGGER_LINE)
+				dc.assertStoppedLocation('step', { line: DEBUGGER_LINE })
 			]);
 		});
 	});

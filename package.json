@@ -1,15 +1,15 @@
 {
-	"name": "mono-debug",
-	"displayName": "Mono Debug",
-	"version": "0.15.7",
-	"publisher": "ms-vscode",
-	"description": "Visual Studio Code debugger extension for Mono",
+	"name": "rhino-debug",
+	"displayName": "Rhino Debug",
+	"version": "0.2.0",
+	"publisher": "mcneel",
+	"description": "Visual Studio Code debugger extension for Rhinoceros",
 	"icon": "images/mono-debug-icon.png",
 	"categories": [
 		"Debuggers"
 	],
 	"author": {
-		"name": "Microsoft Corporation"
+		"name": "McNeel &amp; Associates"
 	},
 	"license": "MIT",
 	"private": true,
@@ -31,10 +31,10 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-mono-debug.git"
+		"url": "https://github.com/mcneel/vscode-rhino-debug.git"
 	},
 	"bugs": {
-		"url": "https://github.com/Microsoft/vscode-mono-debug/issues"
+		"url": "https://github.com/mcneel/vscode-rhino-debug/issues"
 	},
 	"devDependencies": {
 		"@types/es6-collections": "^0.5.29",
@@ -50,20 +50,24 @@
 	},
 	"main": "./out/extension",
 	"activationEvents": [
-		"onCommand:extension.mono-debug.configureExceptions",
-		"onCommand:extension.mono-debug.startSession"
+		"onCommand:extension.rhino-debug.configureExceptions",
+		"onCommand:extension.rhino-debug.startSession",
+		"onCommand:extension.derivedDataRoot"
 	],
 	"contributes": {
-
 		"configuration": {
 			"type": "object",
 			"title": "%configuration.title%",
 			"properties": {
-				"mono-debug.exceptionOptions": {
+				"rhino-debug.exceptionOptions": {
 					"type": "object",
 					"additionalProperties": {
 						"type": "string",
-						"enum": [ "never", "always", "unhandled" ],
+						"enum": [
+							"never",
+							"always",
+							"unhandled"
+						],
 						"enumDescriptions": [
 							"%breakMode.never%",
 							"%breakMode.always%",
@@ -90,10 +94,9 @@
 				}
 			}
 		},
-
 		"commands": [
 			{
-				"command": "extension.mono-debug.configureExceptions",
+				"command": "extension.rhino-debug.configureExceptions",
 				"title": "%configure.exceptions.command%",
 				"category": "Debug"
 			}
@@ -103,108 +106,143 @@
 				"language": "csharp"
 			},
 			{
+				"language": "vb"
+			},
+			{
 				"language": "fsharp"
 			}
 		],
-		"debuggers": [{
-			"type": "mono",
-			"label": "C# Mono",
-			"program": "./bin/Release/mono-debug.exe",
-			"osx": {
-				"runtime": "mono"
-			},
-			"linux": {
-				"runtime": "mono"
-			},
-			"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
-
-			"startSessionCommand": "extension.mono-debug.startSession",
-
-			"initialConfigurations": [
-				{
-					"name": "%mono.launch.config.name%",
-					"type": "mono",
-					"request": "launch",
-					"program": "${workspaceRoot}/program.exe",
-					"cwd": "${workspaceRoot}"
+		"debuggers": [
+			{
+				"type": "rhino",
+				"label": "%mono.label%",
+				"program": "./bin/Debug/net45/mono-debug.exe",
+				"osx": {
+					"runtime": "mono"
 				},
-				{
-					"name": "%mono.attach.config.name%",
-					"type": "mono",
-					"request": "attach",
-					"address": "localhost",
-					"port": 55555
-				}
-			],
-			"configurationAttributes": {
-				"launch": {
-					"required": ["program"],
-					"properties": {
-						"program": {
-							"type": "string",
-							"description": "%mono.launch.program.description%"
-						},
-						"args": {
-							"type": "array",
-							"description": "%mono.launch.args.description%",
-							"items": { "type": "string" },
-							"default": []
-						},
-						"cwd": {
-							"type": "string",
-							"description": "%mono.launch.cwd.description%",
-							"default": "."
-						},
-						"runtimeExecutable": {
-							"type": ["string", "null"],
-							"description": "%mono.launch.runtimeExecutable.description%",
-							"default": null
-						},
-						"runtimeArgs": {
-							"type": "array",
-							"description": "%mono.launch.runtimeArgs.description%",
-							"items": { "type": "string" },
-							"default": []
-						},
-						"env": {
-							"type": "object",
-							"description": "%mono.launch.env.description%",
-							"default": {}
-						},
-						"externalConsole": {
-							"type": "boolean",
-							"deprecationMessage": "%mono.launch.externalConsole.deprecationMessage%",
-							"default": true
-						},
-						"console": {
-							"type": "string",
-							"enum": [ "internalConsole", "integratedTerminal", "externalTerminal" ],
-							"enumDescriptions": [
-								"%mono.launch.console.internalConsole.description%",
-								"%mono.launch.console.integratedTerminal.description%",
-								"%mono.launch.console.externalTerminal.description%"
-							],
-							"description": "%mono.launch.console.description%",
-							"default": "internalConsole"
-						}
+				"linux": {
+					"runtime": "mono"
+				},
+				"variables": {
+					"derivedDataRoot": "extension.derivedDataRoot"
+				},
+				"initialConfigurations": [
+					{
+						"name": "%mono.launch.config.name%",
+						"type": "rhino",
+						"request": "launch",
+						"program": "${command:derivedDataRoot}/Build/Products/Debug/Rhinoceros.app"
+					},
+					{
+						"name": "%mono.attach.config.name%",
+						"type": "rhino",
+						"request": "attach",
+						"address": "localhost",
+						"port": 55555
 					}
-				},
-				"attach": {
-					"required": ["port"],
-					"properties": {
-						"port": {
-							"type": "number",
-							"description": "%mono.attach.port.description%",
-							"default": 55555
-						},
-						"address": {
-							"type": "string",
-							"description": "%mono.attach.address.description%",
-							"default": "undefined"
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"program"
+						],
+						"properties": {
+							"program": {
+								"type": "string",
+								"description": "%mono.launch.program.description%"
+							},
+							"args": {
+								"type": "array",
+								"description": "%mono.launch.args.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
+							},
+							"cwd": {
+								"type": "string",
+								"description": "%mono.launch.cwd.description%",
+								"default": "."
+							},
+							"runtimeExecutable": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "%mono.launch.runtimeExecutable.description%",
+								"default": null
+							},
+							"runtimeArgs": {
+								"type": "array",
+								"description": "%mono.launch.runtimeArgs.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
+							},
+							"env": {
+								"type": "object",
+								"description": "%mono.launch.env.description%",
+								"default": {}
+							},
+							"externalConsole": {
+								"type": "boolean",
+								"deprecationMessage": "%mono.launch.externalConsole.deprecationMessage%",
+								"default": true
+							},
+							"console": {
+								"type": "string",
+								"enum": [
+									"internalConsole",
+									"integratedTerminal",
+									"externalTerminal"
+								],
+								"enumDescriptions": [
+									"%mono.launch.console.internalConsole.description%",
+									"%mono.launch.console.integratedTerminal.description%",
+									"%mono.launch.console.externalTerminal.description%"
+								],
+								"description": "%mono.launch.console.description%",
+								"default": "internalConsole"
+							},
+							"useRuntime": {
+								"type": "boolean",
+								"description": "%mono.launch.useRuntime.description%",
+								"default": true
+							}
+						}
+					},
+					"attach": {
+						"required": [
+							"port"
+						],
+						"properties": {
+							"port": {
+								"type": "number",
+								"description": "%mono.attach.port.description%",
+								"default": 55555
+							},
+							"address": {
+								"type": "string",
+								"description": "%mono.attach.address.description%",
+								"default": "undefined"
+							},
+							"delay": {
+								"type": "number",
+								"default": 0
+							},
+							"maxConnectionAttempts": {
+								"type": "number",
+								"default": 10
+							},
+							"timeBetweenConnectionAttempts": {
+								"type": "number",
+								"default": 500
+							}
 						}
 					}
 				}
 			}
-		}]
+		]
 	}
 }

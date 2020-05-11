@@ -5,6 +5,7 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"name": "Extension",
+			"preLaunchTask": "make",
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}"
@@ -18,7 +19,8 @@
 			"type": "mono",
 			"request": "launch",
 			"name": "Server",
-			"program": "${workspaceRoot}/bin/Debug/mono-debug.exe",
+			"preLaunchTask": "make",
+			"program": "${workspaceRoot}/bin/Debug/net45/mono-debug.exe",
 			"args": [ "--server=4711" ]
 		},
 		{
