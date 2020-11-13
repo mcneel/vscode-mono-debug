@@ -115,7 +115,7 @@
 		"debuggers": [
 			{
 				"type": "rhino",
-				"label": "C# Mono",
+				"label": "C# Rhinoceros",
 				"program": "./bin/Release/mono-debug.exe",
 				"osx": {
 					"runtime": "mono"
@@ -131,15 +131,12 @@
 						"name": "%mono.launch.config.name%",
 						"type": "rhino",
 						"request": "launch",
-						"program": "${command:derivedDataRoot}/Build/Products/Debug/Rhinoceros.app/Contents/MacOS/Rhinoceros",
-						"cwd": "${workspaceRoot}"
-					},
-					{
-						"name": "%mono.attach.config.name%",
-						"type": "rhino",
-						"request": "attach",
-						"address": "localhost",
-						"port": 55555
+						"runtimeExecutable": "/Applications/Rhinoceros.app/Contents/MacOS/Rhinoceros",
+						"passDebugOptionsViaEnvironmentVariable": true,
+						"env": {
+							"RHINO_PLUGIN_PATH": "${workspaceFolder}/Path/To/MyPlugin.rhp",
+							"GRASSHOPPER_PLUGINS": "${workspaceFolder}/Path/To/MyGHPlugin.gha"
+						}
 					}
 				],
 				"configurationAttributes": {

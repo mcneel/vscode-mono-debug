@@ -238,6 +238,17 @@ namespace VSCodeDebug
 					return;
 				}
 			}
+			else
+			{
+				// RHINO:
+				// Only use the runtime if the file is an .exe or .dll
+				var extension = Path.GetExtension(programPath).ToLowerInvariant();
+				if (extension != ".exe" && extension != ".dll")
+				{
+					runtimeExecutable = programPath;
+					programPath = null;
+				}
+			}
 
 
 			// validate argument 'env'
