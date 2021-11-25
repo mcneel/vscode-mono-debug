@@ -1,7 +1,7 @@
 {
 	"name": "rhino-debug",
 	"displayName": "Rhino Debug",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"publisher": "mcneel",
 	"description": "Visual Studio Code debugger extension for Rhinoceros",
 	"icon": "images/rhino-debug-icon.png",
@@ -51,8 +51,7 @@
 	"main": "./out/extension",
 	"activationEvents": [
 		"onCommand:extension.rhino-debug.configureExceptions",
-		"onCommand:extension.rhino-debug.startSession",
-		"onCommand:extension.derivedDataRoot"
+		"onCommand:extension.rhino-debug.startSession"
 	],
 	"contributes": {
 		"configuration": {
@@ -116,22 +115,14 @@
 			{
 				"type": "rhino",
 				"label": "C# Rhinoceros",
-				"program": "./bin/Release/mono-debug.exe",
-				"osx": {
-					"runtime": "mono"
-				},
-				"linux": {
-					"runtime": "mono"
-				},
-				"variables": {
-					"derivedDataRoot": "extension.derivedDataRoot"
-				},
+				"program": "./bin/Release/mono-debug.dll",
+				"runtime": "dotnet",
 				"initialConfigurations": [
 					{
 						"name": "%mono.launch.config.name%",
 						"type": "rhino",
 						"request": "launch",
-						"runtimeExecutable": "/Applications/Rhinoceros.app/Contents/MacOS/Rhinoceros",
+						"runtimeExecutable": "/Applications/Rhino 7.app/Contents/MacOS/Rhinoceros",
 						"passDebugOptionsViaEnvironmentVariable": true,
 						"env": {
 							"RHINO_PLUGIN_PATH": "${workspaceFolder}/Path/To/MyPlugin.rhp",

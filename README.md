@@ -34,7 +34,7 @@ shell, and an installed Mono framework.
 First, clone the rhino-debug project:
 
 ```bash
-$ git clone --recursive https://github.com/microsoft/vscode-mono-debug
+$ git clone --recursive https://github.com/mcneel/vscode-rhino-debug
 ```
 
 To build the extension vsix, run:

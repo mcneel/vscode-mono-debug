@@ -17,7 +17,20 @@
 		{
 			"label": "make",
 			"command": "make",
-			"group": "build"
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "make debug",
+			"type": "shell",
+			"command": "make debug",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "npm install",
+			"command": "npm install",
+			"problemMatcher": []
 		}
 	]
 	

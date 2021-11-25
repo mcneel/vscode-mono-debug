@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -22,14 +23,10 @@ namespace VSCodeDebug
 		private static void Main(string[] argv)
 		{
 			int port = -1;
-			bool getDerivedDataRoot = false;
 
 			// parse command line arguments
 			foreach (var a in argv) {
 				switch (a) {
-				case "--getDerivedDataRoot":
-					getDerivedDataRoot = true;
-					break;
 				case "--trace":
 					trace_requests = true;
 					break;
@@ -56,18 +53,14 @@ namespace VSCodeDebug
 				}
 			}
 
-			if (getDerivedDataRoot)
+			if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("rhino_debug_logfile")) == false) {
+				LOG_FILE_PATH = Environment.GetEnvironmentVariable("rhino_debug_logfile");
+			}
+			if (EnsureLogFile())
 			{
-				Console.Write(Helpers.GetXcodeDerivedDataPath(WorkspaceFolder));
-				return;
+				Trace.Listeners.Add(new TextWriterTraceListener(logFile));
 			}
-
-			if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("mono_debug_logfile")) == false) {
-				LOG_FILE_PATH = Environment.GetEnvironmentVariable("mono_debug_logfile");
-				trace_requests = true;
-				trace_responses = true;
-			}
-
+	
 			if (port > 0) {
 				// TCP/IP server
 				Program.Log("waiting for debug protocol on port " + port);
@@ -81,31 +74,28 @@ namespace VSCodeDebug
 
 		static TextWriter logFile;
 
-		public static void Log(bool predicate, string format, params object[] data)
+		public static void Log(bool predicate, string msg)
 		{
 			if (predicate)
 			{
-				Log(format, data);
+				Log(msg);
 			}
 		}
 		
-		public static void Log(string format, params object[] data)
+		public static void Log(string msg)
 		{
 			try
 			{
-				Console.Error.WriteLine(format, data);
+				Console.Error.WriteLine(msg);
 
 				if (LOG_FILE_PATH != null)
-				{
-					if (logFile == null)
-					{
-						logFile = File.CreateText(LOG_FILE_PATH);
-					}
+                {
+                    EnsureLogFile();
 
-					string msg = string.Format(format, data);
-					logFile.WriteLine(string.Format("{0} {1}", DateTime.UtcNow.ToLongTimeString(), msg));
-				}
-			}
+                    logFile.WriteLine(string.Format("{0} {1}", DateTime.UtcNow.ToLongTimeString(), msg));
+                    logFile.Flush();
+                }
+            }
 			catch (Exception ex)
 			{
 				if (LOG_FILE_PATH != null)
@@ -123,7 +113,21 @@ namespace VSCodeDebug
 			}
 		}
 
-		private static void RunSession(Stream inputStream, Stream outputStream)
+        private static bool EnsureLogFile()
+        {
+			if (logFile != null)
+				return true;
+
+			if (LOG_FILE_PATH == null)
+				return false;
+				
+			var file = File.CreateText(LOG_FILE_PATH);
+			file.AutoFlush = true;
+			logFile = file;
+			return true;
+        }
+
+        private static void RunSession(Stream inputStream, Stream outputStream)
 		{
 			DebugSession debugSession = new MonoDebugSession();
 			debugSession.TRACE = trace_requests;

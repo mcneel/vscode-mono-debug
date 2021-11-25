@@ -13,15 +13,22 @@
 			"stopOnEntry": false,
 			"outFiles": [
 				"${workspaceRoot}/out/**/*.js"
-			]
+			],
+			"env": {
+				"rhino_debug_logfile": "${workspaceFolder}/log.txt"
+			}
 		},
 		{
-			"type": "mono",
+			"type": "coreclr",
 			"request": "launch",
 			"name": "Server",
-			"preLaunchTask": "make",
-			"program": "${workspaceRoot}/bin/Debug/mono-debug.exe",
-			"args": [ "--server=4711" ]
+			"preLaunchTask": "make debug",
+			"program": "${workspaceRoot}/bin/Debug/mono-debug.dll",
+			"args":
+			[
+				"--server=4711", 
+				"--trace=response"
+			]
 		},
 		{
 			"type": "node",

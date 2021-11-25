@@ -15,7 +15,6 @@ const configuration = vscode.workspace.getConfiguration('rhino-debug');
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('extension.rhino-debug.configureExceptions', () => configureExceptions()));
 	context.subscriptions.push(vscode.commands.registerCommand('extension.rhino-debug.startSession', config => startSession(config)));
-	context.subscriptions.push(vscode.commands.registerCommand('extension.derivedDataRoot', config => getDerivedDataRoot(config, context)));
 }
 
 export function deactivate() {
@@ -173,39 +172,4 @@ function startSession(config: any) : StartSessionResult {
 	return {
 		status: 'ok'
 	};
-}
-
-function getDerivedDataRoot (config: any, context: vscode.ExtensionContext) : string {
-	const cp = require('child_process')
-	if (vscode.workspace.workspaceFolders == null)
-		return "";
-
-	for (let index = 0; index < vscode.workspace.workspaceFolders.length; index++) {
-		const workspaceFolder = vscode.workspace.workspaceFolders[index].uri.fsPath;
-		
-		const args = [
-			context.extensionPath + '/bin/Release/mono-debug.exe',
-			'--getDerivedDataRoot',
-			'--workspaceFolder=' + workspaceFolder
-		];
-	
-		const result = cp.execFileSync('mono', args, { encoding: 'utf8' });
-		if (result.length > 0)
-		{
-			return result;
-		}
-	}
-
-	if (vscode.workspace.workspaceFile == null)
-		return "";
-
-	// fallback to rootPath
-	const args = [
-		context.extensionPath + '/bin/Release/mono-debug.exe',
-		'--getDerivedDataRoot',
-		'--workspaceFolder=' + vscode.workspace.workspaceFile.path
-	];
-
-	const result = cp.execFileSync('mono', args, { encoding: 'utf8' });
-	return result;
 }

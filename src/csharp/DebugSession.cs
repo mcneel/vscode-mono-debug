@@ -477,7 +477,7 @@ namespace VSCodeDebug
 					Uri uri = new Uri(clientPath);
 					return uri.LocalPath;
 				}
-				Program.Log("path not well formed: '{0}'", clientPath);
+				Program.Log($"path not well formed: '{clientPath}'");
 				return null;
 			}
 			else {

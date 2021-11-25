@@ -220,7 +220,7 @@ namespace VSCodeDebug
 					{
 						var request = JsonConvert.DeserializeObject<Request>(req);
 
-						Program.Log(TRACE, "C {0}: {1}", request.command, JsonConvert.SerializeObject(request.arguments, Formatting.Indented));
+						Program.Log(TRACE, $"C {request.command}: {JsonConvert.SerializeObject(request.arguments, Formatting.Indented)}");
 
 						var response = new Response(request);
 						DispatchRequest(request.command, request.arguments, response);
@@ -251,11 +251,11 @@ namespace VSCodeDebug
 				message.seq = _sequenceNumber++;
 			}
 
-			Program.Log(TRACE_RESPONSE && message.type == "response", " R: {0}", JsonConvert.SerializeObject(message, Formatting.Indented));
+			Program.Log(TRACE_RESPONSE && message.type == "response", $" R: {JsonConvert.SerializeObject(message, Formatting.Indented)}");
 
 			if (message.type == "event" && message is Event) {
 				var e = message as Event;
-				Program.Log(TRACE, "E {0}: {1}", ((Event)message).eventType, JsonConvert.SerializeObject(e.body, Formatting.Indented));
+				Program.Log(TRACE, $"E {((Event)message).eventType}: {JsonConvert.SerializeObject(e.body, Formatting.Indented)}");
 			}
 
 			var data = ConvertToBytes(message);
