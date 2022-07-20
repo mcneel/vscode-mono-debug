@@ -15,6 +15,7 @@ Use a `launch.json` with the following:
             "type": "rhino",
             "request": "launch",
             "runtimeExecutable": "/Applications/Rhinoceros.app/Contents/MacOS/Rhinoceros",
+            "passDebugOptionsViaEnvironmentVariable": true,
             "env": {
                 // optional: register your plugin(s) to load
                 "RHINO_PLUGIN_PATH": "${workspaceFolder}/Path/To/MyPlugin.rhp",
